@@ -7,14 +7,12 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const dotenv = require('dotenv');
+const APP_VARIABLES_PREFIX = 'APP_';
 
 module.exports = (env, argv) => {
   const MODE = argv.mode || 'production';
-
-  require('dotenv').config({
-    path: MODE === 'production' ? '.env' : '.env.dev',
-  });
-
+  dotenv.config({ path: MODE === 'production' ? '.env' : '.env.dev' });
   return {
     entry: './src/index.tsx',
     output: {
@@ -45,7 +43,13 @@ module.exports = (env, argv) => {
       new HtmlWebpackPlugin({ template: './src/index.html' }),
       new MiniCssExtractPlugin({ filename: 'styles.css' }),
       new webpack.DefinePlugin({
-        'process.env': JSON.stringify(process.env),
+        'process.env': JSON.stringify(
+          Object.fromEntries(
+            Object.entries(process.env).filter(([key]) =>
+              key.startsWith(APP_VARIABLES_PREFIX),
+            ),
+          ),
+        ),
       }),
     ],
     module: {
