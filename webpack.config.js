@@ -13,6 +13,7 @@ const APP_VARIABLES_PREFIX = 'APP_';
 module.exports = (env, argv) => {
   const MODE = argv.mode || 'production';
   dotenv.config({ path: MODE === 'production' ? '.env' : '.env.dev' });
+
   return {
     entry: './src/index.tsx',
     output: {
@@ -36,7 +37,7 @@ module.exports = (env, argv) => {
     optimization: {
       minimize: MODE === 'production',
       minimizer: [new CssMinimizerPlugin(), new TerserPlugin()],
-      usedExports: true,
+      usedExports: MODE === 'development',
     },
     plugins: [
       new CleanWebpackPlugin(),
@@ -56,10 +57,12 @@ module.exports = (env, argv) => {
       rules: [
         {
           test: /\.css$/,
+          exclude: /node_modules/,
           use: [MiniCssExtractPlugin.loader, 'css-loader'],
         },
         {
           test: /\.s[ac]ss$/i,
+          exclude: /node_modules/,
           use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
         },
         {

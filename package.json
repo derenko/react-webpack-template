@@ -63,5 +63,6 @@
       "eslint ./src --fix",
       "prettier --write ."
     ]
-  }
+  },
+  "sideEffects": ["*.scss", "*.css"]
 }
