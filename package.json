@@ -64,5 +64,8 @@
       "prettier --write ."
     ]
   },
-  "sideEffects": ["*.scss", "*.css"]
+  "sideEffects": [
+    "*.scss",
+    "*.css"
+  ]
 }
